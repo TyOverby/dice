@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <script src="./dice.js"></script>
+        <script src="https://www.google.com/jsapi"></script>
+        <link rel="stylesheet" type="text/css" href="./style.css">
+        <link href='http://fonts.googleapis.com/css?family=Roboto:400,900' rel='stylesheet' type='text/css'>
+    </head>
+
+    <body>
+        <h1> Tabletop Dice Simulator </h1>
+        <div id="container">
+            <div class="wrapper">
+                <h3> INFO </h3>
+                <p>
+                    This is a statistics browser for calculating the probability of making more complicated dice
+                    rolls found in games such as Dungeons And Dragons or Pathfinder.
+                </p>
+                <p>
+                    Certain dice rolls are easy to reason about.  For example, what is the odds of rolling a 5
+                    while using a 6-sided dice?  The answer is obviously 1/6.  Using the Tabletop Dice Simulator
+                    syntax, this problem would be written <code> roll(6) </code>.
+                </p>
+                <p>
+                    Other rolls are much harder to intuit.  For example:
+                    "Roll 3 6-sided dice.  Pick the largest number from these throws."
+                    Using TDS syntax, this is easily expressable as <code>max(roll_n(3, 6))</code>.
+                </p>
+            </div>
+        </div>
+        <script>
+            google.load('visualization', '1.1', {packages: ['bar']});
+            google.setOnLoadCallback(function() {
+                //fill_with_eval("first_chart", "sum(max_n(2, roll_n(3, 20)))");
+
+                make_pair(document.querySelector("#container"));
+                make_pair(document.querySelector("#container"));
+                make_pair(document.querySelector("#container"));
+            });
+
+            function make_pair(parent) {
+                var wrapper = document.createElement("div");
+                var title = document.createElement("h2");
+                var remove = document.createElement("button");
+                var equation = document.createElement("input");
+                var graph = document.createElement("div");
+
+
+                wrapper.appendChild(remove);
+                wrapper.appendChild(title);
+                wrapper.appendChild(document.createElement("br"));
+                wrapper.appendChild(document.createElement("br"));
+                wrapper.appendChild(equation);
+                wrapper.appendChild(graph);
+
+                wrapper.classList.add("wrapper");
+                graph.classList.add("graph");
+
+
+                // Remove
+                remove.innerText = "X";
+                remove.onclick = function () {
+                    parent.removeChild(wrapper);
+                };
+
+
+                // TITLE
+                title.innerText = "hi";
+                title.onclick = function () {
+                    title.setAttribute("contentEditable", true);
+                };
+                title.onkeydown = function(event) {
+                    if (event.keyCode == 13) {
+                        title.setAttribute("contentEditable", false);
+                        console.log("NOT EDITABLE")
+                    }
+                };
+                title.onblur = function() {
+                    title.setAttribute("contentEditable", false);
+                    console.log("NOT EDITABLE")
+                };
+                title.classList.add("eq-title");
+
+
+                // EQUATION
+                function updateGraph() {
+                    var text = equation.value;
+                    fill_with_eval(graph, text);
+                }
+                equation.onkeydown = function(event) {
+                    if (event.keyCode == 13) {
+                        updateGraph();
+                    }
+                };
+                equation.onblur = updateGraph;
+                equation.classList.add("eq-input");
+
+                var prev = window.onresize;
+                window.onresize = function() {
+                    updateGraph();
+                    if (prev != null) {
+                        prev();
+                    }
+                }
+
+                parent.appendChild(wrapper);
+            }
+
+            function fill_with_eval(element, s) {
+                fill_with_function(element, new Function("return " + s));
+            }
+
+            function fill_with_function(element, f) {
+                if (typeof f() != "number") {
+                    element.innerHTML = '';
+                    return;
+                }
+
+                fill_with_chart(element,
+                    exports.prepare_for_google_charts(exports.percentize(exports.poll(1000000, f))));
+            }
+
+            function fill_with_chart(element, arr) {
+                var data = google.visualization.arrayToDataTable(arr);
+                var options = {
+                    title: null,
+                    chartArea: {width: '70%'},
+                    colors: ['#2F2F2F'],
+                    hAxis: {
+                        minValue: 0
+                    },
+                    vAxis: {
+                        title:"foo"
+                    },
+                    legend: { position: 'none' }
+                };
+                var chart = new google.charts.Bar(element);
+                chart.draw(data, options);
+            }
+        </script>
+    </body>
+</html>
+
