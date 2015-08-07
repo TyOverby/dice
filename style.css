@@ -47,6 +47,8 @@ code {
 
     background-color: white;
     box-shadow: 0 2px 5px 0 rgba(0, 0, 0, 0.16), 0 2px 10px 0 rgba(0, 0, 0, 0.12);
+    max-height: 310px;
+    overflow: auto;
 }
 
 .wrapper > h2 {
@@ -69,6 +71,7 @@ code {
     margin: 0;
     margin-bottom: 30px;
     padding: 0;
+    width: 100%;
 }
 
 .wrapper > .graph {

@@ -58,7 +58,7 @@ function max_n(n, arr) {
 }
 
 function min_n(n, arr) {
-    return arr.sort(function(a, b) { return b - a; }).slice(0, n);
+    return arr.sort(function(a, b) { return a - b; }).slice(0, n);
 }
 
 exports.prepare_for_google_charts = function (obj) {

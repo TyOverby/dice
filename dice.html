@@ -11,7 +11,7 @@
         <h1> Tabletop Dice Simulator </h1>
         <div id="container">
             <div class="wrapper">
-                <h3> INFO </h3>
+                <h3> ABOUT </h3>
                 <p>
                     This is a statistics browser for calculating the probability of making more complicated dice
                     rolls found in games such as Dungeons And Dragons or Pathfinder.
@@ -23,22 +23,65 @@
                 </p>
                 <p>
                     Other rolls are much harder to intuit.  For example:
-                    "Roll 3 6-sided dice.  Pick the largest number from these throws."
-                    Using TDS syntax, this is easily expressable as <code>max(roll_n(3, 6))</code>.
+                    "Roll three 20-sided dice.  Pick the largest number from these throws."
+                    Using TDS syntax, this is easily expressable as <code>max(roll_n(3, 20))</code>.
                 </p>
+                <p>
+                    What about the summing the smallest two out of three rolls of a d20: <code> sum(drop_max(roll_n(3, 20)))</code>.
+                </p>
+
+                <h3> FUNCTIONS </h3>
+
+                <p>
+                    <code> roll(d) </code> Rolls a `d`-sided dice and returns a value from 1 to d inclusive.
+                </p>
+                <p>
+                    <code> roll_n(n, d) </code>  Rolls a `d`-sided dice `n` times and returns the results of those rolls in an array.
+                </p>
+                <p>
+                    <code> sum(arr) </code> Takes an array of rolls and returns the sum.
+                </p>
+                <p>
+                    <code> max(arr) </code> Takes an array of rolls and returns the largest roll.
+                </p>
+                <p>
+                    <code> min(arr) </code> Takes an array of rolls and returns the smallest roll.
+                </p>
+                <p>
+                    <code> max_n(n, arr) </code> Takes a number `n` and an array of rolls and returns the largest `n` rolls in an array.
+                </p>
+                <p>
+                    <code> min_n(n, arr) </code> Takes a number `n` and an array of rolls and returns the smallest `n` rolls in an array.
+                </p>
+                <p>
+                    <code> drop_min(arr) </code> Takes an array of rolls and returns an array with the smallest roll missing.
+                </p>
+                <p>
+                    <code> drop_max(arr) </code> Takes an array of rolls and returns an array with the largest roll missing.
+                </p>
+                <p>
+                    <code> drop_min_n(n, arr) </code> Takes a number `n` and an array of rolls and returns an array with the smallest `n` rolls missing.
+                </p>
+                <p>
+                    <code> drop_max_n(n, arr) </code> Takes a number `n` and an array of rolls and returns an array with the largest `n` rolls missing.
+                </p>
+
+                <h3> CREDITS </h3>
+                <p> Written by Ty Overby </p>
+                <p> Graph library by Google </p>
             </div>
         </div>
         <script>
             google.load('visualization', '1.1', {packages: ['bar']});
             google.setOnLoadCallback(function() {
-                //fill_with_eval("first_chart", "sum(max_n(2, roll_n(3, 20)))");
-
-                make_pair(document.querySelector("#container"));
-                make_pair(document.querySelector("#container"));
-                make_pair(document.querySelector("#container"));
+                make_pair(document.querySelector("#container"), "Roll a d6", "roll(6)");
+                make_pair(document.querySelector("#container"), "Pick the largest roll from three rolls of a d20", "max(roll_n(3, 20))");
+                make_pair(document.querySelector("#container"), "sum the smallest two out of three rolls of a d20:", "sum(drop_max(roll_n(3, 20)))");
+                make_pair(document.querySelector("#container"), "Oh wow, it's actually just javascript", "Math.round(Math.random())");
+                setTimeout(function() { window.onresize(); }, 200);
             });
 
-            function make_pair(parent) {
+            function make_pair(parent, eq_title, content) {
                 var wrapper = document.createElement("div");
                 var title = document.createElement("h2");
                 var remove = document.createElement("button");
@@ -65,7 +108,7 @@
 
 
                 // TITLE
-                title.innerText = "hi";
+                title.innerText = eq_title || "unnamed simulation";
                 title.onclick = function () {
                     title.setAttribute("contentEditable", true);
                 };
@@ -86,6 +129,10 @@
                 function updateGraph() {
                     var text = equation.value;
                     fill_with_eval(graph, text);
+                }
+                if (content) {
+                    equation.value = content;
+                    updateGraph();
                 }
                 equation.onkeydown = function(event) {
                     if (event.keyCode == 13) {
