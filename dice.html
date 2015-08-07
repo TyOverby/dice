@@ -69,7 +69,9 @@
 
                 <h3> TODO </h3>
                 <ul>
-                    <li> Add an option to display "sum probabilities" such as "what are the odds that I'll roll a 5 or higher".
+                    <li> Sort array before displaying on graph (need to do this for booleans too) </li>
+                    <li> Add an option to display "sum probabilities" such as "what are the odds that I'll roll a 5 or higher". </li>
+                    <li> Stop recomputing values when not necessary </li>
                     <li> Save rolling functions to local storage </li>
                     <li> Swap out the huge graphing library for D3 </li>
                     <li> Rename my damn css style names </li>
@@ -174,7 +176,8 @@
             }
 
             function fill_with_function(element, f) {
-                if (typeof f() != "number") {
+                var t = typeof f();
+                if (t != "number" && t != "boolean") {
                     element.innerHTML = '';
                     return;
                 }
