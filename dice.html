@@ -66,19 +66,33 @@
                     <code> drop_max_n(n, arr) </code> Takes a number `n` and an array of rolls and returns an array with the largest `n` rolls missing.
                 </p>
 
+                <h3> TODO </h3>
+                <ul>
+                    <li> Save rolling functions to local storage </li>
+                    <li> Swap out the huge graphing library for D3 </li>
+                    <li> Rename my damn css style names </li>
+                </ul>
+
                 <h3> CREDITS </h3>
                 <p> Written by Ty Overby </p>
-                <p> Graph library by Google </p>
+            </div>
+
+            <div id="new_eq" class="wrapper">
+                <span>+</span>
             </div>
         </div>
         <script>
             google.load('visualization', '1.1', {packages: ['bar']});
             google.setOnLoadCallback(function() {
-                make_pair(document.querySelector("#container"), "Roll a d6", "roll(6)");
-                make_pair(document.querySelector("#container"), "Pick the largest roll from three rolls of a d20", "max(roll_n(3, 20))");
-                make_pair(document.querySelector("#container"), "sum the smallest two out of three rolls of a d20:", "sum(drop_max(roll_n(3, 20)))");
-                make_pair(document.querySelector("#container"), "Oh wow, it's actually just javascript", "Math.round(Math.random())");
+                var container = document.querySelector("#container");
+                make_pair(container, "Roll a d6", "roll(6)");
+                make_pair(container, "Pick the largest roll from three rolls of a d20", "max(roll_n(3, 20))");
+                make_pair(container, "sum the smallest two out of three rolls of a d20:", "sum(drop_max(roll_n(3, 20)))");
+                make_pair(container, "Oh wow, it's actually just javascript", "Math.round(Math.random())");
                 setTimeout(function() { window.onresize(); }, 200);
+                document.querySelector("#new_eq").onclick = function() {
+                    make_pair(container, "Unnamed Dice Equation");
+                };
             });
 
             function make_pair(parent, eq_title, content) {
@@ -101,14 +115,14 @@
 
 
                 // Remove
-                remove.innerText = "X";
+                remove.textContent = "X";
                 remove.onclick = function () {
                     parent.removeChild(wrapper);
                 };
 
 
                 // TITLE
-                title.innerText = eq_title || "unnamed simulation";
+                title.textContent = eq_title || "unnamed simulation";
                 title.onclick = function () {
                     title.setAttribute("contentEditable", true);
                 };
