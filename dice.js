@@ -2,6 +2,7 @@ if (this.exports == undefined) {
     window.exports = window;
 }
 
+
 function poll(trials, f) {
     var obj = {};
     for (var i = 0; i < trials; i++) {
